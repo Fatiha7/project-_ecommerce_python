@@ -1,0 +1,115 @@
+
+{% block content %}
+{% load static %}
+{% load cart_template_tag %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<style>
+    body {
+    font-family: 'Roboto Condensed', sans-serif;
+    background-color: #f5f5f5
+}
+
+.hedding {
+    font-size: 20px;
+    color: #ab8181;
+}
+
+.main-section {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, 5%);
+}
+
+.left-side-product-box img {
+    width: 100%;
+}
+
+.left-side-product-box .sub-img img {
+    margin-top: 5px;
+    width: 100px;
+    height: 100px;
+}
+
+.right-side-pro-detail span {
+    font-size: 15px;
+}
+
+.right-side-pro-detail p {
+    font-size: 25px;
+    color: #a1a1a1;
+}
+
+.right-side-pro-detail .price-pro {
+    color: #E45641;
+}
+
+.right-side-pro-detail .tag-section {
+    font-size: 18px;
+    color: #5D4C46;
+}
+
+.pro-box-section .pro-box img {
+    width: 100%;
+    height: 200px;
+}
+
+@media (min-width:360px) and (max-width:640px) {
+    .pro-box-section .pro-box img {
+        height: auto;
+    }
+}
+</style>
+<div class="container">
+    <div class="col-lg-10 border p-2 main-section bg-white">
+        <div class="row m-5">
+            <div class="col-6 m-lg-auto left-side-product-box ">
+                <img class=" align-content-center" src="{{ product.image }}"></img>
+            </div>
+            <div class="col-lg-6 pb-3 " >
+                <div class="right-side-pro-detail border p-3 m-1">
+                    <div class="row">
+                        <div class="col-lg-12">
+                           <div class="m-0 p-0 m-0 p-0 text-center" ><h2 style="color: rgb(56, 56, 52);">{{ product.name }}</h2></div>
+                           
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="m-0 p-0 m-0 p-0 text-lowercase" ><h5 style="color: rgb(141, 140, 67);">{{ product.category.category_name }}</h5></div>
+                            <hr class="p-0 m-0">
+                        </div>
+                        <div class="col-lg-12 pt-2">
+                            <h5>Product Description</h5>
+                            <span>{{ product.desc }}</span>
+                            <hr class="m-0 pt-2 mt-2">
+                        </div>
+                        <div class="col-lg-12">
+                            <div style="color: rgb(218, 79, 107);" class="m-0 p-0"> {{ product.price }} $</div>
+                            <hr class="m-0 pt-2 mt-2">   
+                        </div>
+                        <div class="col-lg-12 mt-3">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'add_to_cart' product.pk %}"  class=" ted btn btn-dark w-100">Add to Cart</a>
+                                    {% endif %}
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

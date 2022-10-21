@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+{% load static %}
+{% load cart_template_tag %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>Baker Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+    <!-- Template Main CSS File -->
+    <link href="{% static '/css/style.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Baker - v4.7.0
+  * Template URL: https://bootstrapmade.com/baker-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <h1 class="logo"><a href="index.html">Girls Day</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+            <li><a class="nav-link scrollto  font-weight-bold " href="{% url 'index' %}">Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a class="nav-link scrollto font-weight-bold active " href="{% url 'orderlist' %}">Cart&nbsp;&nbsp;
+              <div class="nav-link scrollto rounded-circle"  style="background-color: aliceblue; color: rgb(173, 64, 150);">{{request.user | cart_item_count}}</div>
+            </a></li>
+            {% if user.is_superuser %}
+            <li><a class="nav-link scrollto font-weight-bold " href="{% url 'add_product'%}">Add Product</a></li>
+            {%endif%}
+            <li><div class="nav-link scrollto font-weight-bold font-italic " style="color:rgb(101, 228, 211)" href="#hero"><h4> {{user.username}}</h4></div></li>
+            <li><a class="getstarted scrollto font-weight-bold " href="{% url 'user_logout' %}">Logout</a></li>
+            {% else %}
+            <li><a class="getstarted scrollto font-weight-bold " href="{% url 'user_login' %}">Login</a></li>
+            <li><a class="getstarted scrollto font-weight-bold " href="{% url 'user_register'%}">Register</a></li>
+            {%endif%}
+        
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          
+          <ol>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li>Inner Page</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <br>
+        <br>
+        <div class="text-center" style="color: #8796ac;"><div><h6>{{ message }} </h6></div></div>
+        {% endfor %}
+        {% endif %}
+        <div class="row gy-4">
+            <div class="col-lg-4">
+                <div class="protfolio-info">
+                    <h3>Payment Summary</h3>
+                    <ul>
+                        <li><strong>Total Amount</strong>:{{final_price}}</li>
+                        <li>
+                            <button id="rzp-button1" class="btn btn-sm btn-dark btn-block">
+                                Now
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js/" ></script>
+    <script>
+        var options={
+        "key":"{{razorpay_merchant_id}}",
+        "amount":"{% widthratio final_price 1 100 %}",
+        "currency":"MDH",
+        "name":"GirlsDay",
+        "description":"Test Transaction",
+        "order_id":"{{ order_id }}",
+        "callback_url": "{% url 'handlerequest' %}",
+        "prefill": {
+        "name":" {{ request.user.username}}",
+        "email":"{{request.user.email}}",
+        "contact":"+212" + "{{request.user.phone_field}}"
+        },
+        "theme":{
+            "color":"#7d8ba1"
+        }
+    }
+    </script>
+    <input type="hidden" custom="Hidden Element" name="hidden">
+    </form>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+ <!-- Vendor JS Files -->
+ <script src="{% static '/vendor/purecounter/purecounter.js' %}"></script>
+ <script src="{% static '/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+ <script src="{% static '/vendor/glightbox/js/glightbox.min.js' %}"></script>
+ <script src="{% static '/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+ <script src="{% static '/vendor/swiper/swiper-bundle.min.js' %}"></script>
+ <script src="{% static '/vendor/php-email-form/validate.js' %}"></script>
+
+ <!-- Template Main JS File -->
+ <script src="{% static '/js/main.js' %}"></script>
+
+</body>
+
+</html>

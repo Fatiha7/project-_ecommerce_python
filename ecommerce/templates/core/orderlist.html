@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% load static %}
+{% load cart_template_tag %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>Baker Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+    <!-- Template Main CSS File -->
+    <link href="{% static '/css/style.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Baker - v4.7.0
+  * Template URL: https://bootstrapmade.com/baker-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <h1 class="logo"><a href="index.html">Girls Day</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+            <li><a class="nav-link scrollto  font-weight-bold " href="{% url 'index' %}">Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a class="nav-link scrollto font-weight-bold active " href="{% url 'orderlist' %}">Cart&nbsp;&nbsp;
+              <div class="nav-link scrollto rounded-circle"  style="background-color: aliceblue; color: rgb(173, 64, 150);">{{request.user | cart_item_count}}</div>
+            </a></li>
+            {% if user.is_superuser %}
+            <li><a class="nav-link scrollto font-weight-bold " href="{% url 'add_product'%}">Add Product</a></li>
+            {%endif%}
+            <li><div class="nav-link scrollto font-weight-bold font-italic " style="color:rgb(101, 228, 211)" href="#hero"><h4> {{user.username}}</h4></div></li>
+            <li><a class="getstarted scrollto font-weight-bold " href="{% url 'user_logout' %}">Logout</a></li>
+            {% else %}
+            <li><a class="getstarted scrollto font-weight-bold " href="{% url 'user_login' %}">Login</a></li>
+            <li><a class="getstarted scrollto font-weight-bold " href="{% url 'user_register'%}">Register</a></li>
+            {%endif%}
+        
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          
+          <ol>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li>Inner Page</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total Item Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order_item in order.items.all %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{ order_item.product.name}}</td>
+                <td>$. {{ order_item.product.price}}</td>
+                <td>
+                  <a href="{% url 'add_item' order_item.product.pk %}">+</a> &nbsp;
+                  {{ order_item.quantity}} &nbsp;
+                  <a href="{% url 'remove_item' order_item.product.pk %}">-</i></a>
+                </td>
+              <td>$. {{ order_item.get_total_item_price}}</td>
+              </tr>
+              {% empty %}
+              <tr class="row100 body">
+                <td class="cell100 column1"> Your Cart is Empty</td>
+                <td colspan="cell100 column1">
+                   <a href="{% url 'index' %}" class="btn btn-dark float-right">Continue Shopping</a>
+                </td>
+              </tr>
+              {% endfor %}
+              {%  if order.get_total_price %}
+              <tr class="row100 body" style="background-color:rgb(101, 228, 211);">
+                <td class="cell100 column1" style="color:white;"><b>Total Order Price</b></td>
+                <td class="cell100 column2"></td>
+                <td class="cell100 column3"></td>
+                <td class="cell100 column4"></td>
+                <td class="cell100 column5" style="color:rgb(168, 129, 129);"><i class=" fas fa-rupee-sign"></i> $. {{ order.get_total_price }} </td>
+              </tr>
+              <tr class="row100 body">
+                <td class="cell100 column1" >
+                  <a href="{% url 'checkout_page' %}" class="btn btn-dark float-right ml-2">Checkout</a>
+                  <a href="{% url 'index' %}"  class="btn btn-dark float-right">Continue Shopping</a>
+                </td>
+
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+ <!-- Vendor JS Files -->
+ <script src="{% static '/vendor/purecounter/purecounter.js' %}"></script>
+ <script src="{% static '/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+ <script src="{% static '/vendor/glightbox/js/glightbox.min.js' %}"></script>
+ <script src="{% static '/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+ <script src="{% static '/vendor/swiper/swiper-bundle.min.js' %}"></script>
+ <script src="{% static '/vendor/php-email-form/validate.js' %}"></script>
+
+ <!-- Template Main JS File -->
+ <script src="{% static '/js/main.js' %}"></script>
+
+</body>
+
+</html>
