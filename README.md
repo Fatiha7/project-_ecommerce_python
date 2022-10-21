@@ -1,1 +1,1 @@
-# project-_ecommerce_python
+# Django ecommerce project
